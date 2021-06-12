@@ -19,6 +19,28 @@ pub enum ReadStreamError {
     InvalidBoolean {
         found_integer: i32,
     },
+    VarOpaqueExceedsMaxLength {
+        at_position: usize,
+        max_length: i32,
+        actual_length: i32,
+    },
+    StringExceedsMaxLength {
+        at_position: usize,
+        max_length: i32,
+        actual_length: i32,
+    },
+    VarArrayExceedsMaxLength {
+        at_position: usize,
+        max_length: i32,
+        actual_length: i32,
+    },
+    InvalidOptional {
+        at_position: usize,
+        has_code: u32,
+    },
+    InvalidEnumDiscriminator {
+        at_position: usize,
+    },
 }
 
 pub struct ReadStream<'a> {
@@ -91,16 +113,12 @@ impl<'a> ReadStream<'a> {
         Ok(result)
     }
 
-    pub fn read_next_string(&mut self, no_of_bytes: usize) -> Result<Vec<u8>, ReadStreamError> {
-        self.read_next_binary_data(no_of_bytes)
-    }
-
-    pub fn rewind(&mut self, no_of_bytes: usize) {
-        self.read_index -= no_of_bytes;
-    }
-
     pub fn no_of_bytes_left_to_read(&self) -> isize {
         self.source.len() as isize - self.read_index as isize
+    }
+
+    pub fn get_position(&self) -> usize {
+        self.read_index
     }
 }
 
@@ -143,16 +161,6 @@ impl WriteStream {
         let no_of_padding_bytes = extend_to_multiple_of_4(length) - length;
         self.result
             .extend(iter::repeat(0).take(no_of_padding_bytes));
-    }
-
-    pub fn write_next_string_and_length(&mut self, value: &str) -> Result<(), WriteStreamError> {
-        let value = value.as_bytes();
-        let length = u32::try_from(value.len()).map_err(|_| WriteStreamError::StringTooLong {
-            string_length: value.len(),
-        })?;
-        self.write_next_u32(length);
-        self.write_next_binary_data(value);
-        Ok(())
     }
 
     pub fn get_result(self) -> Vec<u8> {
