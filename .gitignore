@@ -1,10 +1,7 @@
 /target
-/src/types.rs
 /node_modules
 /js-xdr/node_modules
 /x2JavaScript/generated
-/x2JavaScript/commonjs
-/js-xdr/dist
 /js-xdr/src/test
 /generated
 /lib
