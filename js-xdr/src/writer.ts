@@ -15,7 +15,7 @@ export function generateXdrDefinition(
   outputPath: string
 ) {
   let result =
-    "#[allow(unused_imports)]\nuse alloc::boxed::Box;\n#[allow(unused_imports)]\nuse crate::xdr_codec::XdrCodec;\n";
+    "#[allow(unused_imports)]\nuse sp_std::{prelude::*, boxed::Box};\n#[allow(unused_imports)]\nuse crate::xdr_codec::XdrCodec;\n";
   result +=
     "#[allow(unused_imports)]\nuse crate::streams::{ReadStream, ReadStreamError, WriteStream, WriteStreamError};\n";
   result +=
@@ -67,7 +67,8 @@ export function generateXdrDefinition(
 const staticFiles = [
   "src/xdr_codec.rs",
   "src/streams.rs",
-  "src/main.rs",
+  "src/lib.rs",
+  "src/xdr.rs",
   "src/compound_types.rs",
   "Cargo.lock",
   "Cargo.toml",

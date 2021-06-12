@@ -1,10 +1,12 @@
 [package]
-name = "rust-xdr-experiment"
+name = "substrate-stellar-xdr"
 version = "0.1.0"
 authors = ["Torsten Stüber <torsten@satoshipay.io>"]
 edition = "2018"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
-sp-std = { default-features = false, version = '3.0.0' }
+sp-std = { default-features = false, version = "3.0.0" }
+
+[features]
+default = ["main-types-only"]
+main-types-only = []

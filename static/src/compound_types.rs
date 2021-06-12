@@ -1,4 +1,4 @@
-use sp_std::vec::Vec;
+use sp_std::{prelude::*, vec::Vec};
 
 use crate::streams::{ReadStream, ReadStreamError, WriteStream, WriteStreamError};
 use crate::xdr_codec::XdrCodec;
