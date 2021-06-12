@@ -8,8 +8,8 @@
     "test": "node test/test",
     "download-x": "cd x2JavaScript && ./generate && cd ..",
     "generate": "rimraf generated && npm run generate-transaction-types && npm run generate-all-types",
-    "generate-transaction-types": "DESTINATION=./generated MAIN_FILE_NAME=mainTypes.rs GENERATE_TYPES=TransactionEnvelope,TransactionResult,TransactionMeta,EnvelopeType npx ts-node x2JavaScript/generated/stellar-xdr_generated.ts",
-    "generate-all-types": "DESTINATION=./generated MAIN_FILE_NAME=src/types.rs npx ts-node x2JavaScript/generated/stellar-xdr_generated.ts",
+    "generate-transaction-types": "DESTINATION=./generated MAIN_FILE_NAME=main_types.rs GENERATE_TYPES=TransactionEnvelope,TransactionResult,TransactionMeta,EnvelopeType npx ts-node x2JavaScript/generated/stellar-xdr_generated.ts",
+    "generate-all-types": "DESTINATION=./generated MAIN_FILE_NAME=all_types.rs npx ts-node x2JavaScript/generated/stellar-xdr_generated.ts",
     "build-complete": "npm run download-x && npm run generate",
     "prepublishOnly": "npm run build-complete"
   },

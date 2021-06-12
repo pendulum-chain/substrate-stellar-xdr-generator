@@ -70,7 +70,7 @@ impl<'a> ReadStream<'a> {
         }
     }
 
-    pub fn read_next_byte_array<const N: usize>(&mut self) -> Result<&[u8; N], ReadStreamError> {
+    fn read_next_byte_array<const N: usize>(&mut self) -> Result<&[u8; N], ReadStreamError> {
         let array: Result<&[u8; N], _> =
             (&self.source[self.read_index..self.read_index + N]).try_into();
 
@@ -123,7 +123,6 @@ impl<'a> ReadStream<'a> {
 }
 
 pub struct WriteStream {
-    write_index: usize,
     result: Vec<u8>,
 }
 
@@ -134,7 +133,6 @@ pub enum WriteStreamError {
 impl WriteStream {
     pub fn new() -> WriteStream {
         WriteStream {
-            write_index: 0,
             result: Vec::with_capacity(128),
         }
     }
