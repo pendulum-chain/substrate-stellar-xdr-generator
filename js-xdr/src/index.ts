@@ -31,6 +31,8 @@ export function config(definitionFactory: DefinitionFactory) {
     },
 
     union: (name, unionDefinition) => {
+      // postpone construction of union type because we need to make sure
+      // that all enums are already defined
       unions.push({ name, unionDefinition });
     },
 

@@ -1,6 +1,6 @@
-# Typescript Stellar XDR Decoder/Encoder
+# Generator of the no_std crate for encoding and decoding Stellar XDR types
 
-This library is a decoder and encoder of all xdr types used in Stellar. It transforms JavaScript objects into XDR and vice versa.
+This repository generates a Rust decoder and encoder of all XDR types used in Stellar.
 
 ## Usage
 
@@ -32,7 +32,7 @@ How to run locally
   npm install
 ```
 
-### Build typescript XDR serializer/deserializer
+### Build Rust XDR serializer/deserializer
 
 ```
   npm run build-complete

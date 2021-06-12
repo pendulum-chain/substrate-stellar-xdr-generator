@@ -39,13 +39,6 @@ export function generateXdrDefinition(
   while ((typeName = toBeDone.pop())) {
     const typeDefinition = types[typeName];
 
-    /*result += `
-      export type ${typeName} = ${typeDefinition.tsType};
-      export const ${typeName}: converter.XdrConverter<${typeName}> = converter.generator(() => ${
-      typeDefinition.converter
-    });
-    `;*/
-
     if (typeDefinition.type !== "enum" && typeDefinition.type !== "struct" && typeDefinition.type !== "union") {
       result += `#[allow(dead_code)]\npub type ${typeName} = ${determineTypeReference(typeDefinition)};\n\n`;
     } else {
