@@ -1,0 +1,16 @@
+{
+  "name": "js-xdr",
+  "version": "0.1.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prettier": "prettier --write static/*.ts && prettier --write src/*.ts"
+  },
+  "author": "SatoshiPay Ltd.",
+  "license": "Apache-2.0",
+  "prettier": {
+    "printWidth": 120,
+    "tabWidth": 2
+  }
+}
