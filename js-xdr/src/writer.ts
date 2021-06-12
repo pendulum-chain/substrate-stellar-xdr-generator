@@ -72,13 +72,12 @@ export function generateXdrDefinition(
 }
 
 const staticFiles = [
-  "converters/basicTypes.ts",
-  "converters/compoundTypes.ts",
-  "converters/index.ts",
-  "converters/streams.ts",
-  "converters/types.ts",
-  "utils/int64.ts",
-  "index.ts",
+  "src/xdr_codec.rs",
+  "src/streams.rs",
+  "src/main.rs",
+  "src/compound_types.rs",
+  "Cargo.lock",
+  "Cargo.toml",
 ];
 
 export function copyStaticFiles(outputPath: string) {
