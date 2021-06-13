@@ -72,6 +72,7 @@ const staticFiles = [
   "src/compound_types.rs",
   "Cargo.lock",
   "Cargo.toml",
+  "README.md",
 ];
 
 export function copyStaticFiles(outputPath: string) {
