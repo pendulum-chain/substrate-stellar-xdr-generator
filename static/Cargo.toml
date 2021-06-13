@@ -3,6 +3,11 @@ name = "substrate-stellar-xdr"
 version = "0.1.0"
 authors = ["Torsten Stüber <torsten@satoshipay.io>"]
 edition = "2018"
+license = "Apache-2.0"
+description = "A coder/decoder of Stellar XDR types"
+repository = "https://github.com/Pendulum-Chain/substrate-stellar-xdr-generator"
+readme = "README.md"
+keywords = ["substrate", "Stellar", "XDR"]
 
 [dependencies]
 sp-std = { default-features = false, version = "3.0.0" }

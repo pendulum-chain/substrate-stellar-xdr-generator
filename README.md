@@ -1,41 +1,44 @@
-# Generator of the no_std crate for encoding and decoding Stellar XDR types
+# Generator of Stellar XDR type Encoder/Decoder
 
-This repository generates a Rust decoder and encoder of all XDR types used in Stellar.
+This repository generates a Rust decoder and encoder of all XDR types used in Stellar. The generated crate is to be used with [Substrate](https://www.substrate.io/).
 
-## Usage
+This generates the crate `substrate-stellar-xdr` on [crates.io](https://crates.io/crates/substrate-stellar-xdr).
 
-```javascript
-const { TransactionEnvelope } = require("ts-stellar-xdr");
+# How to use
 
-const transactionEnvelope =
-  "AAAAAJM++/BQ/J83ai5alxXDK/s5oNhYQPtYDq4VtLf7qc9eAAAAZAEK1kwAAAACAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAzMnJ6" +
-  "nCpdtk2mZPKKIJ9GTynIxfP58O0cQnrpz9ukBsAAAAF9nmWgAAAAAAAAAAB+6nPXgAAAEBKCwRLujMDdruWlHGpvcBYaVKqUDGbpH" +
-  "ifZ7bjGmrCs7cldblBe2ZI7AGMC79QQr6peR/jf/HOSDwkXYWJczMH";
+## Requirements
 
-const transactionEnvelopeArrayBuffer = base64Decode(transactionEnvelope); // for some base64 decoding function
+NodeJs, NPM, Docker, Cargo (to publish)
 
-const transaction = TransactionEnvelope.fromXdr(transactionEnvelopeArrayBuffer);
-console.log(transaction);
+## Step 1: Generate Rust code
 
-const encodedTransactionEnvelope = base64Encode(TransactionEnvelope.toXdr(transaction));
-
-console.log(encodedTransactionEnvelope === transactionEnvelope); // true
-```
-
-## Developers
-
-How to run locally
-
-### Preparation
+This downloads the latest version of Stellar XDR type specification and generates
+according Rust code
 
 ```
-  npm install
+npm install
+npm build
 ```
 
-### Build Rust XDR serializer/deserializer
+### How it works
+
+- downloads the Stellar XDR type specification from GitHub repository `stellar/stellar-core`
+- uses the [Stellar's own parser](https://github.com/stellar/xdrgen.git) to generate a JavaScript version of the XDR type specification
+  - this runs in a Docker container, a local Ruby installation is not required
+  - this code is in the folder `x2JavaScript`
+- executes the generated JavaScript code to generate the Rust code
+  - this code is in the folder `js-xdr`
+- copy static Rust files to the generated Rust code to complete the crate
+  - the static Rust files are in the folder `static`
+
+## Step 2: Publish crate
+
+This requires cargo to publish the generated crate to crates.io.
+
+Don't forget to update the version in `static/Cargo.toml` and to run `npm build` afterwards.
 
 ```
-  npm run build-complete
+npm publish
 ```
 
 # Assumptions
