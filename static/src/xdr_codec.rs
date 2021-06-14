@@ -13,7 +13,7 @@ pub trait XdrCodec: Sized {
     fn from_xdr(buffer: &Vec<u8>) -> Result<Self, ReadStreamError> {
         let mut read_stream = ReadStream::new(buffer);
         let value = Self::from_xdr_buffered(&mut read_stream)?;
-        if !read_stream.no_of_bytes_left_to_read() != 0 {
+        if read_stream.no_of_bytes_left_to_read() != 0 {
             return Err(ReadStreamError::TypeEndsTooEarly {
                 missing_no_of_bytes: read_stream.no_of_bytes_left_to_read(),
             });

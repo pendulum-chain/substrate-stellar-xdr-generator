@@ -8,6 +8,7 @@ fn extend_to_multiple_of_4(value: usize) -> usize {
     (value + 3) & !3
 }
 
+#[derive(Debug)]
 pub enum ReadStreamError {
     SuddenEnd {
         at_position: usize,
@@ -126,6 +127,7 @@ pub struct WriteStream {
     result: Vec<u8>,
 }
 
+#[derive(Debug)]
 pub enum WriteStreamError {
     StringTooLong { string_length: usize },
 }
