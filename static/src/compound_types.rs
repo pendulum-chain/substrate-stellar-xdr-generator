@@ -5,7 +5,8 @@ use crate::xdr_codec::XdrCodec;
 
 #[allow(dead_code)]
 #[derive(Debug, Clone, Eq, PartialEq)]
-pub struct LimitedVarOpaque<const N: i32>(Vec<u8>);
+pub struct LimitedVarOpaque<const N: i32>(pub Vec<u8>);
+
 impl<const N: i32> LimitedVarOpaque<N> {
     fn new(vec: Vec<u8>) -> Option<Self> {
         match vec.len() > N as usize {
@@ -42,7 +43,8 @@ pub type UnlimitedVarOpaque = LimitedVarOpaque<{ i32::MAX }>;
 
 #[allow(dead_code)]
 #[derive(Debug, Clone, Eq, PartialEq)]
-pub struct LimitedString<const N: i32>(Vec<u8>);
+pub struct LimitedString<const N: i32>(pub Vec<u8>);
+
 impl<const N: i32> LimitedString<N> {
     fn new(vec: Vec<u8>) -> Option<Self> {
         match vec.len() > N as usize {
@@ -79,7 +81,8 @@ pub type UnlimitedString = LimitedString<{ i32::MAX }>;
 
 #[allow(dead_code)]
 #[derive(Debug, Clone, Eq, PartialEq)]
-pub struct LimitedVarArray<T, const N: i32>(Vec<T>);
+pub struct LimitedVarArray<T, const N: i32>(pub Vec<T>);
+
 impl<T, const N: i32> LimitedVarArray<T, N> {
     fn new(vec: Vec<T>) -> Option<Self> {
         match vec.len() > N as usize {
