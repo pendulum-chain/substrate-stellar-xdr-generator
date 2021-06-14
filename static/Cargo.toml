@@ -1,6 +1,6 @@
 [package]
 name = "substrate-stellar-xdr"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Torsten Stüber <torsten@satoshipay.io>"]
 edition = "2018"
 license = "Apache-2.0"
@@ -13,5 +13,5 @@ keywords = ["substrate", "Stellar", "XDR"]
 sp-std = { default-features = false, version = "3.0.0" }
 
 [features]
-default = ["main-types-only"]
+default = []
 main-types-only = []

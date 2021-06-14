@@ -17,7 +17,7 @@ according Rust code
 
 ```
 npm install
-npm build
+npm run build
 ```
 
 ### How it works
@@ -38,8 +38,12 @@ This requires cargo to publish the generated crate to crates.io.
 Don't forget to update the version in `static/Cargo.toml` and to run `npm build` afterwards.
 
 ```
-npm publish
+npm run publish
 ```
+
+# Tests
+
+Run a simple test suite via `npm run test`. This requires to execute Step 1 (specified above) first.
 
 # Assumptions
 
