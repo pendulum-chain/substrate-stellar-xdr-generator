@@ -16,7 +16,7 @@ export function generateXdrDefinition(
 ) {
   let result =
     `// This code has been automatically generated on ${new Date().toISOString().slice(0, 10)}\n` +
-    `// using the project https://github.com/Pendulum-Chain/substrate-stellar-xdr-generator\n` +
+    `// using the project https://github.com/pendulum-chain/substrate-stellar-xdr-generator\n` +
     "// Do not edit this code by hand!\n\n" +
     "#[allow(unused_imports)]\nuse sp_std::{prelude::*, boxed::Box};\n#[allow(unused_imports)]\nuse crate::xdr_codec::XdrCodec;\n";
   result +=

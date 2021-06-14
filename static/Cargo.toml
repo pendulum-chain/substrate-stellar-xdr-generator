@@ -1,11 +1,11 @@
 [package]
 name = "substrate-stellar-xdr"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["Torsten Stüber <torsten@satoshipay.io>"]
 edition = "2018"
 license = "Apache-2.0"
 description = "A coder/decoder of Stellar XDR types"
-repository = "https://github.com/Pendulum-Chain/substrate-stellar-xdr-generator"
+repository = "https://github.com/pendulum-chain/substrate-stellar-xdr-generator"
 readme = "README.md"
 keywords = ["substrate", "Stellar", "XDR"]
 
