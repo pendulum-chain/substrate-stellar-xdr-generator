@@ -1,5 +1,4 @@
-use core::convert::TryFrom;
-use core::convert::TryInto;
+use core::convert::{AsRef, TryFrom, TryInto};
 use core::iter;
 
 use sp_std::vec::Vec;
@@ -44,13 +43,13 @@ pub enum ReadStreamError {
     },
 }
 
-pub struct ReadStream<'a> {
+pub struct ReadStream<T: AsRef<[u8]>> {
     read_index: usize,
-    source: &'a Vec<u8>,
+    source: T,
 }
 
-impl<'a> ReadStream<'a> {
-    pub fn new(source: &Vec<u8>) -> ReadStream {
+impl<T: AsRef<[u8]>> ReadStream<T> {
+    pub fn new(source: T) -> ReadStream<T> {
         ReadStream {
             read_index: 0,
             source,
@@ -58,7 +57,7 @@ impl<'a> ReadStream<'a> {
     }
 
     fn ensure_size(&self, no_of_bytes_to_read: usize) -> Result<(), ReadStreamError> {
-        if no_of_bytes_to_read + self.read_index > self.source.len() {
+        if no_of_bytes_to_read + self.read_index > self.source.as_ref().len() {
             return Err(self.generate_sudden_end_error(no_of_bytes_to_read));
         }
         Ok(())
@@ -66,14 +65,14 @@ impl<'a> ReadStream<'a> {
 
     fn generate_sudden_end_error(&self, no_of_bytes_to_read: usize) -> ReadStreamError {
         ReadStreamError::SuddenEnd {
-            at_position: self.source.len(),
+            at_position: self.source.as_ref().len(),
             expected_length: no_of_bytes_to_read + self.read_index,
         }
     }
 
     fn read_next_byte_array<const N: usize>(&mut self) -> Result<&[u8; N], ReadStreamError> {
         let array: Result<&[u8; N], _> =
-            (&self.source[self.read_index..self.read_index + N]).try_into();
+            (self.source.as_ref()[self.read_index..self.read_index + N]).try_into();
 
         match array {
             Ok(array) => {
@@ -109,13 +108,13 @@ impl<'a> ReadStream<'a> {
         no_of_bytes: usize,
     ) -> Result<Vec<u8>, ReadStreamError> {
         self.ensure_size(extend_to_multiple_of_4(no_of_bytes))?;
-        let result = self.source[self.read_index..self.read_index + no_of_bytes].to_vec();
+        let result = self.source.as_ref()[self.read_index..self.read_index + no_of_bytes].to_vec();
         self.read_index += extend_to_multiple_of_4(no_of_bytes);
         Ok(result)
     }
 
     pub fn no_of_bytes_left_to_read(&self) -> isize {
-        self.source.len() as isize - self.read_index as isize
+        self.source.as_ref().len() as isize - self.read_index as isize
     }
 
     pub fn get_position(&self) -> usize {
