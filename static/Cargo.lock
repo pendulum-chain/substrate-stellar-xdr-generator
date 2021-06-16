@@ -8,7 +8,7 @@ checksum = "35391ea974fa5ee869cb094d5b437688fbf3d8127d64d1b9fed5822a1ed39b12"
 
 [[package]]
 name = "substrate-stellar-xdr"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "sp-std",
 ]

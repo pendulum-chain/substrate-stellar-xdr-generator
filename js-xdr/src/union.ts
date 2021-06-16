@@ -96,7 +96,9 @@ ${subWriters.join("\n")}
         }
     }
 
-    fn from_xdr_buffered(read_stream: &mut ReadStream) -> Result<Self, ReadStreamError> {
+    fn from_xdr_buffered<T: AsRef<[u8]>>(
+        read_stream: &mut ReadStream<T>,
+    ) -> Result<Self, ReadStreamError> {
         match ${determineTypeReference(unionDefinition.switchOn)}::from_xdr_buffered(read_stream)? {
 ${subReaders.join("\n")}${defaultReader ? `\n            code => Ok(${defaultReader}),` : ""}
         }

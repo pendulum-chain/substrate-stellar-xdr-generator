@@ -1,3 +1,4 @@
+use core::convert::AsRef;
 use sp_std::{prelude::*, vec::Vec};
 
 use crate::streams::{ReadStream, ReadStreamError, WriteStream};
@@ -22,7 +23,9 @@ impl<const N: i32> XdrCodec for LimitedVarOpaque<N> {
         write_stream.write_next_binary_data(&self.0[..]);
     }
 
-    fn from_xdr_buffered(read_stream: &mut ReadStream) -> Result<Self, ReadStreamError> {
+    fn from_xdr_buffered<R: AsRef<[u8]>>(
+        read_stream: &mut ReadStream<R>,
+    ) -> Result<Self, ReadStreamError> {
         let length = read_stream.read_next_u32()? as i32;
         match length > N {
             true => Err(ReadStreamError::VarOpaqueExceedsMaxLength {
@@ -59,7 +62,9 @@ impl<const N: i32> XdrCodec for LimitedString<N> {
         write_stream.write_next_binary_data(&self.0[..]);
     }
 
-    fn from_xdr_buffered(read_stream: &mut ReadStream) -> Result<Self, ReadStreamError> {
+    fn from_xdr_buffered<R: AsRef<[u8]>>(
+        read_stream: &mut ReadStream<R>,
+    ) -> Result<Self, ReadStreamError> {
         let length = read_stream.read_next_u32()? as i32;
         match length > N {
             true => Err(ReadStreamError::StringExceedsMaxLength {
@@ -98,7 +103,9 @@ impl<T: XdrCodec, const N: i32> XdrCodec for LimitedVarArray<T, N> {
         }
     }
 
-    fn from_xdr_buffered(read_stream: &mut ReadStream) -> Result<Self, ReadStreamError> {
+    fn from_xdr_buffered<R: AsRef<[u8]>>(
+        read_stream: &mut ReadStream<R>,
+    ) -> Result<Self, ReadStreamError> {
         let length = read_stream.read_next_u32()? as i32;
         match length > N {
             true => Err(ReadStreamError::VarArrayExceedsMaxLength {

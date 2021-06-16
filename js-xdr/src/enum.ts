@@ -20,7 +20,9 @@ export function processEnum(name: string, enumDefinition: EnumDefinition): EnumT
         value.to_xdr_buffered(write_stream);
     }
 
-    fn from_xdr_buffered(read_stream: &mut ReadStream) -> Result<Self, ReadStreamError> {
+    fn from_xdr_buffered<T: AsRef<[u8]>>(
+        read_stream: &mut ReadStream<T>,
+    ) -> Result<Self, ReadStreamError> {
         let enum_value = i32::from_xdr_buffered(read_stream)?;
         match enum_value {
 ${subReaders.join("\n")}
