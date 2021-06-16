@@ -19,8 +19,7 @@ export function generateXdrDefinition(
     `// using the project https://github.com/pendulum-chain/substrate-stellar-xdr-generator\n` +
     "// Do not edit this code by hand!\n\n" +
     "#[allow(unused_imports)]\nuse sp_std::{prelude::*, boxed::Box};\n#[allow(unused_imports)]\nuse crate::xdr_codec::XdrCodec;\n";
-  result +=
-    "#[allow(unused_imports)]\nuse crate::streams::{ReadStream, ReadStreamError, WriteStream, WriteStreamError};\n";
+  result += "#[allow(unused_imports)]\nuse crate::streams::{ReadStream, ReadStreamError, WriteStream};\n";
   result +=
     "#[allow(unused_imports)]\nuse crate::compound_types::{LimitedVarOpaque, LimitedString, LimitedVarArray, UnlimitedVarOpaque, UnlimitedString, UnlimitedVarArray};\n\n";
 

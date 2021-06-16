@@ -21,13 +21,13 @@ fn main() {
     let xdr = base64::decode(ENVELOPE).unwrap();
     let envelope = xdr::TransactionEnvelope::from_xdr(&xdr).unwrap();
     println!("{:#?}", envelope);
-    assert_eq!(xdr, envelope.to_xdr().unwrap());
+    assert_eq!(xdr, envelope.to_xdr());
 }
 ```
 
 All Stellar XDR types are defined in the module `xdr`. Each type implements the `xdr_codex::XdrCodec` trait, which defines the following two useful methods:
 
-- `fn to_xdr(&self) -> Result<Vec<u8>, WriteStreamError>`
+- `fn to_xdr(&self) -> Vec<u8>`
 - `from_xdr(buffer: &Vec<u8>) -> Result<Self, ReadStreamError>`
 
 ### Features

@@ -58,14 +58,14 @@ export function processUnion(name: string, unionDefinition: UnionDefinition, res
 
       subTypes.push(`    ${caseIdentifier}(${typeReference})`);
       subWriters.push(
-        `            ${name}::${caseIdentifier}(value) => {${fieldName}.to_xdr_buffered(write_stream)?; value.to_xdr_buffered(write_stream)?},`
+        `            ${name}::${caseIdentifier}(value) => {${fieldName}.to_xdr_buffered(write_stream); value.to_xdr_buffered(write_stream)},`
       );
       subReaders.push(
         `            ${simpleFieldName} => Ok(${name}::${caseIdentifier}(${fullyQualifiedTypeReference}::from_xdr_buffered(read_stream)?)),`
       );
     } else {
       subTypes.push(`    ${caseIdentifier}`);
-      subWriters.push(`            ${name}::${caseIdentifier} => ${fieldName}.to_xdr_buffered(write_stream)?,`);
+      subWriters.push(`            ${name}::${caseIdentifier} => ${fieldName}.to_xdr_buffered(write_stream),`);
       subReaders.push(`            ${simpleFieldName} => Ok(${name}::${caseIdentifier}),`);
     }
   });
@@ -78,7 +78,7 @@ export function processUnion(name: string, unionDefinition: UnionDefinition, res
 
   if (unionDefinition.defaultArm || patternNotExaustive) {
     subTypes.push(`    Default(${determineTypeReference(unionDefinition.switchOn)})`);
-    subWriters.push(`            ${name}::Default(code) => code.to_xdr_buffered(write_stream)?,`);
+    subWriters.push(`            ${name}::Default(code) => code.to_xdr_buffered(write_stream),`);
     defaultReader = `${name}::Default(code)`;
   }
 
@@ -90,11 +90,10 @@ export function processUnion(name: string, unionDefinition: UnionDefinition, res
 
   const typeDefinition = `pub enum ${name} {\n${subTypes.join(",\n")}\n}`;
   const typeImplementation = `
-    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) -> Result<(), WriteStreamError> {
+    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) {
         match self {
 ${subWriters.join("\n")}
         }
-        Ok(())
     }
 
     fn from_xdr_buffered(read_stream: &mut ReadStream) -> Result<Self, ReadStreamError> {

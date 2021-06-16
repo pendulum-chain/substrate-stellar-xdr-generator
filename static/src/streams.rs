@@ -127,11 +127,6 @@ pub struct WriteStream {
     result: Vec<u8>,
 }
 
-#[derive(Debug)]
-pub enum WriteStreamError {
-    StringTooLong { string_length: usize },
-}
-
 impl WriteStream {
     pub fn new() -> WriteStream {
         WriteStream {
