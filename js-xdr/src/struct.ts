@@ -28,16 +28,15 @@ export function processStruct(name: string, structDefinition: StructDefinition):
       : determineFullyQualifiedTypeReference(type);
 
     subTypes.push(`    pub ${stringifiedKey}: ${typeReference}`);
-    subWriters.push(`        self.${stringifiedKey}.to_xdr_buffered(write_stream)?;`);
+    subWriters.push(`        self.${stringifiedKey}.to_xdr_buffered(write_stream);`);
     subReaders.push(`            ${stringifiedKey}: ${fullyQualifiedTypeReference}::from_xdr_buffered(read_stream)?,`);
     dependencies = { ...dependencies, ...determineDependencies(type) };
   });
 
   const typeDefinition = `pub struct ${name} {\n${subTypes.join(",\n")}\n}`;
   const typeImplementation = `
-    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) -> Result<(), WriteStreamError> {
+    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) {
 ${subWriters.join("\n")}
-        Ok(())
     }
 
     fn from_xdr_buffered(read_stream: &mut ReadStream) -> Result<Self, ReadStreamError> {

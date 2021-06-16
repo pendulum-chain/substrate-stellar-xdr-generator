@@ -1,13 +1,13 @@
 use core::convert::TryInto;
 use sp_std::{boxed::Box, vec::Vec};
 
-use crate::streams::{ReadStream, ReadStreamError, WriteStream, WriteStreamError};
+use crate::streams::{ReadStream, ReadStreamError, WriteStream};
 
 pub trait XdrCodec: Sized {
-    fn to_xdr(&self) -> Result<Vec<u8>, WriteStreamError> {
+    fn to_xdr(&self) -> Vec<u8> {
         let mut write_stream = WriteStream::new();
-        self.to_xdr_buffered(&mut write_stream)?;
-        Ok(write_stream.get_result())
+        self.to_xdr_buffered(&mut write_stream);
+        write_stream.get_result()
     }
 
     fn from_xdr(buffer: &Vec<u8>) -> Result<Self, ReadStreamError> {
@@ -22,15 +22,14 @@ pub trait XdrCodec: Sized {
         Ok(value)
     }
 
-    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) -> Result<(), WriteStreamError>;
+    fn to_xdr_buffered(&self, write_stream: &mut WriteStream);
 
     fn from_xdr_buffered(read_stream: &mut ReadStream) -> Result<Self, ReadStreamError>;
 }
 
 impl XdrCodec for u64 {
-    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) -> Result<(), WriteStreamError> {
+    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) {
         write_stream.write_next_u64(*self);
-        Ok(())
     }
 
     fn from_xdr_buffered(read_stream: &mut ReadStream) -> Result<Self, ReadStreamError> {
@@ -39,9 +38,8 @@ impl XdrCodec for u64 {
 }
 
 impl XdrCodec for i64 {
-    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) -> Result<(), WriteStreamError> {
+    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) {
         write_stream.write_next_i64(*self);
-        Ok(())
     }
 
     fn from_xdr_buffered(read_stream: &mut ReadStream) -> Result<Self, ReadStreamError> {
@@ -50,9 +48,8 @@ impl XdrCodec for i64 {
 }
 
 impl XdrCodec for u32 {
-    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) -> Result<(), WriteStreamError> {
+    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) {
         write_stream.write_next_u32(*self);
-        Ok(())
     }
 
     fn from_xdr_buffered(read_stream: &mut ReadStream) -> Result<Self, ReadStreamError> {
@@ -61,9 +58,8 @@ impl XdrCodec for u32 {
 }
 
 impl XdrCodec for i32 {
-    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) -> Result<(), WriteStreamError> {
+    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) {
         write_stream.write_next_i32(*self);
-        Ok(())
     }
 
     fn from_xdr_buffered(read_stream: &mut ReadStream) -> Result<Self, ReadStreamError> {
@@ -72,9 +68,8 @@ impl XdrCodec for i32 {
 }
 
 impl XdrCodec for bool {
-    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) -> Result<(), WriteStreamError> {
+    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) {
         write_stream.write_next_i32(if *self { 1 } else { 0 });
-        Ok(())
     }
 
     fn from_xdr_buffered(read_stream: &mut ReadStream) -> Result<Self, ReadStreamError> {
@@ -89,22 +84,11 @@ impl XdrCodec for bool {
     }
 }
 
-impl XdrCodec for () {
-    fn to_xdr_buffered(&self, _write_stream: &mut WriteStream) -> Result<(), WriteStreamError> {
-        Ok(())
-    }
-
-    fn from_xdr_buffered(_read_stream: &mut ReadStream) -> Result<Self, ReadStreamError> {
-        Ok(())
-    }
-}
-
 impl<T: XdrCodec, const N: usize> XdrCodec for [T; N] {
-    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) -> Result<(), WriteStreamError> {
+    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) {
         for item in self.iter() {
-            item.to_xdr_buffered(write_stream)?;
+            item.to_xdr_buffered(write_stream);
         }
-        Ok(())
     }
 
     fn from_xdr_buffered(read_stream: &mut ReadStream) -> Result<Self, ReadStreamError> {
@@ -117,9 +101,8 @@ impl<T: XdrCodec, const N: usize> XdrCodec for [T; N] {
 }
 
 impl<const N: usize> XdrCodec for [u8; N] {
-    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) -> Result<(), WriteStreamError> {
+    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) {
         write_stream.write_next_binary_data(self);
-        Ok(())
     }
 
     fn from_xdr_buffered(read_stream: &mut ReadStream) -> Result<Self, ReadStreamError> {
@@ -129,15 +112,14 @@ impl<const N: usize> XdrCodec for [u8; N] {
 }
 
 impl<T: XdrCodec> XdrCodec for Option<T> {
-    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) -> Result<(), WriteStreamError> {
+    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) {
         match self {
             None => write_stream.write_next_u32(0),
             Some(value) => {
                 write_stream.write_next_u32(1);
-                value.to_xdr_buffered(write_stream)?
+                value.to_xdr_buffered(write_stream);
             }
         }
-        Ok(())
     }
 
     fn from_xdr_buffered(read_stream: &mut ReadStream) -> Result<Self, ReadStreamError> {
@@ -153,7 +135,7 @@ impl<T: XdrCodec> XdrCodec for Option<T> {
 }
 
 impl<T: XdrCodec> XdrCodec for Box<T> {
-    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) -> Result<(), WriteStreamError> {
+    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) {
         self.as_ref().to_xdr_buffered(write_stream)
     }
 

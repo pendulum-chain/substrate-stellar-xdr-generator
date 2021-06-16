@@ -1,6 +1,6 @@
 use sp_std::{prelude::*, vec::Vec};
 
-use crate::streams::{ReadStream, ReadStreamError, WriteStream, WriteStreamError};
+use crate::streams::{ReadStream, ReadStreamError, WriteStream};
 use crate::xdr_codec::XdrCodec;
 
 #[allow(dead_code)]
@@ -17,10 +17,9 @@ impl<const N: i32> LimitedVarOpaque<N> {
 }
 
 impl<const N: i32> XdrCodec for LimitedVarOpaque<N> {
-    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) -> Result<(), WriteStreamError> {
+    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) {
         write_stream.write_next_u32(self.0.len() as u32);
         write_stream.write_next_binary_data(&self.0[..]);
-        Ok(())
     }
 
     fn from_xdr_buffered(read_stream: &mut ReadStream) -> Result<Self, ReadStreamError> {
@@ -55,10 +54,9 @@ impl<const N: i32> LimitedString<N> {
 }
 
 impl<const N: i32> XdrCodec for LimitedString<N> {
-    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) -> Result<(), WriteStreamError> {
+    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) {
         write_stream.write_next_u32(self.0.len() as u32);
         write_stream.write_next_binary_data(&self.0[..]);
-        Ok(())
     }
 
     fn from_xdr_buffered(read_stream: &mut ReadStream) -> Result<Self, ReadStreamError> {
@@ -93,12 +91,11 @@ impl<T, const N: i32> LimitedVarArray<T, N> {
 }
 
 impl<T: XdrCodec, const N: i32> XdrCodec for LimitedVarArray<T, N> {
-    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) -> Result<(), WriteStreamError> {
+    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) {
         write_stream.write_next_u32(self.0.len() as u32);
         for item in self.0.iter() {
-            item.to_xdr_buffered(write_stream)?;
+            item.to_xdr_buffered(write_stream);
         }
-        Ok(())
     }
 
     fn from_xdr_buffered(read_stream: &mut ReadStream) -> Result<Self, ReadStreamError> {

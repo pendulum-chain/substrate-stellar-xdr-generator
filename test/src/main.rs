@@ -56,10 +56,10 @@ mod test {
     fn test() {
         let xdr = base64::decode(ENVELOPE).unwrap();
         let envelope = xdr::TransactionEnvelope::from_xdr(&xdr).unwrap();
-        assert_eq!(xdr, envelope.to_xdr().unwrap());
+        assert_eq!(xdr, envelope.to_xdr());
 
         let xdr = base64::decode(META).unwrap();
         let meta = xdr::TransactionMeta::from_xdr(&xdr).unwrap();
-        assert_eq!(xdr, meta.to_xdr().unwrap());
+        assert_eq!(xdr, meta.to_xdr());
     }
 }

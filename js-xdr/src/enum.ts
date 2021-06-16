@@ -15,9 +15,9 @@ export function processEnum(name: string, enumDefinition: EnumDefinition): EnumT
 
   const typeDefinition = `pub enum ${name} {\n${subTypes.join(",\n")}\n}`;
   const typeImplementation = `
-    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) -> Result<(), WriteStreamError> {
+    fn to_xdr_buffered(&self, write_stream: &mut WriteStream) {
         let value = *self as i32;
-        value.to_xdr_buffered(write_stream)
+        value.to_xdr_buffered(write_stream);
     }
 
     fn from_xdr_buffered(read_stream: &mut ReadStream) -> Result<Self, ReadStreamError> {
