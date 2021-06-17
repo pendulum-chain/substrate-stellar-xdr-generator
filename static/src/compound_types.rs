@@ -6,14 +6,18 @@ use crate::xdr_codec::XdrCodec;
 
 #[allow(dead_code)]
 #[derive(Debug, Clone, Eq, PartialEq)]
-pub struct LimitedVarOpaque<const N: i32>(pub Vec<u8>);
+pub struct LimitedVarOpaque<const N: i32>(Vec<u8>);
 
 impl<const N: i32> LimitedVarOpaque<N> {
-    fn new(vec: Vec<u8>) -> Option<Self> {
+    pub fn new(vec: Vec<u8>) -> Option<Self> {
         match vec.len() > N as usize {
             true => None,
             false => Some(LimitedVarOpaque(vec)),
         }
+    }
+
+    pub fn get_vec(&self) -> &Vec<u8> {
+        &self.0
     }
 }
 
@@ -45,14 +49,18 @@ pub type UnlimitedVarOpaque = LimitedVarOpaque<{ i32::MAX }>;
 
 #[allow(dead_code)]
 #[derive(Debug, Clone, Eq, PartialEq)]
-pub struct LimitedString<const N: i32>(pub Vec<u8>);
+pub struct LimitedString<const N: i32>(Vec<u8>);
 
 impl<const N: i32> LimitedString<N> {
-    fn new(vec: Vec<u8>) -> Option<Self> {
+    pub fn new(vec: Vec<u8>) -> Option<Self> {
         match vec.len() > N as usize {
             true => None,
             false => Some(LimitedString(vec)),
         }
+    }
+
+    pub fn get_vec(&self) -> &Vec<u8> {
+        &self.0
     }
 }
 
@@ -84,14 +92,27 @@ pub type UnlimitedString = LimitedString<{ i32::MAX }>;
 
 #[allow(dead_code)]
 #[derive(Debug, Clone, Eq, PartialEq)]
-pub struct LimitedVarArray<T, const N: i32>(pub Vec<T>);
+pub struct LimitedVarArray<T, const N: i32>(Vec<T>);
 
 impl<T, const N: i32> LimitedVarArray<T, N> {
-    fn new(vec: Vec<T>) -> Option<Self> {
+    pub fn new(vec: Vec<T>) -> Option<Self> {
         match vec.len() > N as usize {
             true => None,
             false => Some(LimitedVarArray(vec)),
         }
+    }
+
+    pub fn get_vec(&self) -> &Vec<T> {
+        &self.0
+    }
+
+    pub fn push(&mut self, item: T) -> Result<(), ()> {
+        if self.0.len() >= N as usize - 1 {
+            return Err(());
+        }
+
+        self.0.push(item);
+        Ok(())
     }
 }
 
