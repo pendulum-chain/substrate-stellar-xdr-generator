@@ -9,11 +9,35 @@ export function initializeOutputPath(outputPath: string) {
   mkdirSync(outputPath, { recursive: true });
 }
 
+const ROOT_MAIN_TYPES =
+  "TransactionEnvelope, TransactionResult, TransactionMeta, EnvelopeType, TransactionSignaturePayload";
+
+function determineMainTypes(types: Record<string, XdrType>) {
+  const remaining = ROOT_MAIN_TYPES.split(",").map((name) => name.trim());
+  const mainTypes = new Set<string>();
+
+  while (true) {
+    const typeName = remaining.pop();
+    if (typeName === undefined) return mainTypes;
+    mainTypes.add(typeName);
+
+    Object.keys(determineDependencies(types[typeName])).forEach((key) => {
+      if (!mainTypes.has(key) && remaining.indexOf(key) === -1) {
+        remaining.push(key);
+      }
+    });
+  }
+
+  return mainTypes;
+}
+
 export function generateXdrDefinition(
   types: Record<string, XdrType>,
   constants: Record<string, number>,
   outputPath: string
 ) {
+  const mainTypes = determineMainTypes(types);
+
   let result =
     `// This code has been automatically generated on ${new Date().toISOString().slice(0, 10)}\n` +
     `// using the project https://github.com/pendulum-chain/substrate-stellar-xdr-generator\n` +
@@ -28,35 +52,21 @@ export function generateXdrDefinition(
       .map(([constant, value]) => `#[allow(dead_code)]\npub const ${constantCase(constant)}: i32 = ${value};\n`)
       .join("") + "\n";
 
-  let toBeDone: string[];
-  if (process.env.GENERATE_TYPES) {
-    toBeDone = process.env.GENERATE_TYPES.split(",").map((name) => name.trim());
-  } else {
-    toBeDone = Object.keys(types); // generate all types
-  }
-
-  const done: string[] = [];
-
-  let typeName: string | undefined;
-  while ((typeName = toBeDone.pop())) {
+  Object.keys(types).forEach((typeName) => {
     const typeDefinition = types[typeName];
 
+    const typePrefix = `${mainTypes.has(typeName) ? "" : '#[cfg(feature = "all-types")]\n'}`;
     if (typeDefinition.type !== "enum" && typeDefinition.type !== "struct" && typeDefinition.type !== "union") {
-      result += `#[allow(dead_code)]\npub type ${typeName} = ${determineTypeReference(typeDefinition)};\n\n`;
+      result += `#[allow(dead_code)]\n${typePrefix}pub type ${typeName} = ${determineTypeReference(
+        typeDefinition
+      )};\n\n`;
     } else {
       const derive =
         typeDefinition.type === "enum" ? "Debug, Copy, Clone, Eq, PartialEq" : "Debug, Clone, Eq, PartialEq";
-      result += `#[allow(dead_code)]\n#[derive(${derive})]\n${typeDefinition.typeDefinition}\n`;
-      result += `impl XdrCodec for ${typeName} {${typeDefinition.typeImplementation}\n}\n\n`;
+      result += `#[allow(dead_code)]\n${typePrefix}#[derive(${derive})]\n${typeDefinition.typeDefinition}\n\n`;
+      result += `${typePrefix}impl XdrCodec for ${typeName} {${typeDefinition.typeImplementation}\n}\n\n`;
     }
-
-    done.push(typeName);
-    Object.keys(determineDependencies(typeDefinition)).forEach((key) => {
-      if (done.indexOf(key) === -1 && toBeDone.indexOf(key) === -1) {
-        toBeDone.push(key);
-      }
-    });
-  }
+  });
 
   const mainFileName = process.env.MAIN_FILE_NAME;
   if (!mainFileName) {
@@ -70,7 +80,6 @@ const staticFiles = [
   "src/xdr_codec.rs",
   "src/streams.rs",
   "src/lib.rs",
-  "src/xdr.rs",
   "src/compound_types.rs",
   "Cargo.lock",
   "Cargo.toml",

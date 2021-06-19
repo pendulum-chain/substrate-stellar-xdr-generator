@@ -76,6 +76,6 @@ export function config(definitionFactory: DefinitionFactory) {
     types[name] = processUnion(name, unionDefinition, resolvedSwitchType);
   });
 
-  generateXdrDefinition(types, constants, outputPath);
   copyStaticFiles(outputPath);
+  generateXdrDefinition(types, constants, outputPath);
 }
