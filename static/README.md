@@ -32,4 +32,4 @@ All Stellar XDR types are defined in the module `xdr`. Each type implements the 
 
 ### Features
 
-- `main-types-only`: when specified, will only export the main types (Transactions, Operations, etc.)
+- `all-types`: when specified, will generate all types – otherwise only those types are generated that are in the dependency tree of the types `TransactionEnvelope`, `TransactionResult`, `TransactionMeta`, `EnvelopeType` and `TransactionSignaturePayload`

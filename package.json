@@ -6,10 +6,9 @@
   "types": "./lib/index.d.ts",
   "scripts": {
     "download-x": "cd x2JavaScript && ./generate && cd ..",
-    "generate": "rimraf generated && npm run generate-transaction-types && npm run generate-all-types && npm run format",
-    "generate-transaction-types": "DESTINATION=./generated MAIN_FILE_NAME=main_types.rs GENERATE_TYPES=TransactionEnvelope,TransactionResult,TransactionMeta,EnvelopeType,TransactionSignaturePayload npx ts-node x2JavaScript/generated/stellar-xdr_generated.ts",
-    "generate-all-types": "DESTINATION=./generated MAIN_FILE_NAME=all_types.rs npx ts-node x2JavaScript/generated/stellar-xdr_generated.ts",
-    "format": "cd generated && cargo fmt -- all_types.rs main_types.rs   && cd ..",
+    "generate": "rimraf generated && npm run generate-all-types && npm run format",
+    "generate-all-types": "DESTINATION=./generated MAIN_FILE_NAME=src/xdr.rs npx ts-node x2JavaScript/generated/stellar-xdr_generated.ts",
+    "format": "cd generated && cargo fmt && cd ..",
     "build": "npm run download-x && npm run generate",
     "publish": "cd generated && cargo publish",
     "test": "cd test && cargo test"
