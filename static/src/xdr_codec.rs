@@ -1,3 +1,4 @@
+use base64::{decode_config_slice, encode_config_slice};
 use core::convert::{AsRef, TryInto};
 use sp_std::{boxed::Box, vec::Vec};
 
@@ -20,6 +21,29 @@ pub trait XdrCodec: Sized {
         }
 
         Ok(value)
+    }
+
+    fn to_base64_xdr(&self) -> Vec<u8> {
+        let xdr = self.to_xdr();
+        let mut base64_buffer = Vec::new();
+        base64_buffer.resize(xdr.len() * 4 / 3 + 4, 0);
+        let bytes_written = encode_config_slice(xdr, base64::STANDARD, &mut base64_buffer);
+        base64_buffer.resize(bytes_written, 0);
+        base64_buffer
+    }
+
+    fn from_base64_xdr<T: AsRef<[u8]>>(input: T) -> Result<Self, ReadStreamError> {
+        let input = input.as_ref();
+        let mut buf = Vec::new();
+        buf.resize(input.len() * 4 / 3 + 4, 0);
+
+        match decode_config_slice(input, base64::STANDARD, &mut buf) {
+            Ok(bytes_written) => {
+                buf.resize(bytes_written, 0);
+                Self::from_xdr(buf)
+            }
+            Err(_) => Err(ReadStreamError::InvalidBase64),
+        }
     }
 
     fn to_xdr_buffered(&self, write_stream: &mut WriteStream);
