@@ -41,6 +41,7 @@ pub enum ReadStreamError {
     InvalidEnumDiscriminator {
         at_position: usize,
     },
+    InvalidBase64,
 }
 
 pub struct ReadStream<T: AsRef<[u8]>> {
