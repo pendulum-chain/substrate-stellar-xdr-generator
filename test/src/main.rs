@@ -1,13 +1,13 @@
 use substrate_stellar_xdr::{xdr, xdr_codec::XdrCodec};
 
-const ENVELOPE: &str = "AAAAAgAAAAC9xFYU1gQJeH4apEfzJkMCsW5DL4GEWRpyVjQHOlWVzgAAAZA\
+const ENVELOPE: &[u8; 408] = b"AAAAAgAAAAC9xFYU1gQJeH4apEfzJkMCsW5DL4GEWRpyVjQHOlWVzgAAAZA\
 CGsQoAAQytgAAAAAAAAAAAAAAAgAAAAAAAAADAAAAAVhMUEcAAAAAxxJMrxQQOx9raxDm3\
 lINsLvksi7tj1BCQXzWTtqigbgAAAAAAAAAAAbK5N8CprKDAExLQAAAAAAAAAAAAAAAAAA\
 AAAMAAAAAAAAAAVhMUEcAAAAAxxJMrxQQOx9raxDm3lINsLvksi7tj1BCQXzWTtqigbgAA\
 AAAlV2+xQAEaBMAJiWgAAAAAAAAAAAAAAAAAAAAATpVlc4AAABAaX11e1dGcDkXrFT5s3Q\
 N6x3v4kQqJ/1VIjqO00y6OStd70/aYiXR35e4289RvmBTudJ5Q05PaRsD8p1qa17VDQ==";
 
-const META: &str = "AAAAAgAAAAIAAAADAiOf2gAAAAAAAAAAvcRWFNYECXh+GqRH8yZDArFuQy+Bh\
+const META: &[u8; 2060] = b"AAAAAgAAAAIAAAADAiOf2gAAAAAAAAAAvcRWFNYECXh+GqRH8yZDArFuQy+Bh\
 FkaclY0BzpVlc4AAAABMLFdwgIaxCgABDK1AAAAAQAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA\
 AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAECI5/aAAAAAAAAAAC9xFYU1gQJeH4apEf\
 zJkMCsW5DL4GEWRpyVjQHOlWVzgAAAAEwsV3CAhrEKAAEMrYAAAABAAAAAAAAAAAAAAAAAQ\
@@ -39,12 +39,10 @@ JBfNZO2qKBuAAAAAANpQv+f/////////8AAAABAAAAAQAAAAARQQaGAAAAAAbK5N8AAAAAA\
 AAAAAAAAAA=";
 
 fn main() {
-    let xdr = base64::decode(ENVELOPE).unwrap();
-    let envelope = xdr::TransactionEnvelope::from_xdr(&xdr).unwrap();
+    let envelope = xdr::TransactionEnvelope::from_base64_xdr(ENVELOPE).unwrap();
     println!("{:#?}", envelope);
 
-    let xdr = base64::decode(META).unwrap();
-    let meta = xdr::TransactionMeta::from_xdr(&xdr).unwrap();
+    let meta = xdr::TransactionMeta::from_base64_xdr(META).unwrap();
     println!("{:#?}", meta);
 }
 
@@ -54,12 +52,10 @@ mod test {
 
     #[test]
     fn test() {
-        let xdr = base64::decode(ENVELOPE).unwrap();
-        let envelope = xdr::TransactionEnvelope::from_xdr(&xdr).unwrap();
-        assert_eq!(xdr, envelope.to_xdr());
+        let envelope = xdr::TransactionEnvelope::from_base64_xdr(ENVELOPE).unwrap();
+        assert_eq!(ENVELOPE, &envelope.to_base64_xdr()[..]);
 
-        let xdr = base64::decode(META).unwrap();
-        let meta = xdr::TransactionMeta::from_xdr(&xdr).unwrap();
-        assert_eq!(xdr, meta.to_xdr());
+        let meta = xdr::TransactionMeta::from_base64_xdr(META).unwrap();
+        assert_eq!(META, &meta.to_base64_xdr()[..]);
     }
 }

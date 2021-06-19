@@ -18,8 +18,7 @@ const ENVELOPE: &str =
     N6x3v4kQqJ/1VIjqO00y6OStd70/aYiXR35e4289RvmBTudJ5Q05PaRsD8p1qa17VDQ==";
 
 fn main() {
-    let xdr = base64::decode(ENVELOPE).unwrap();
-    let envelope = xdr::TransactionEnvelope::from_xdr(&xdr).unwrap();
+    let envelope = xdr::TransactionEnvelope::from_base64_xdr(ENVELOPE).unwrap();
     println!("{:#?}", envelope);
     assert_eq!(xdr, envelope.to_xdr());
 }
