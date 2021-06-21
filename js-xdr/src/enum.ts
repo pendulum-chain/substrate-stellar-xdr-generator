@@ -22,11 +22,11 @@ export function processEnum(name: string, enumDefinition: EnumDefinition): EnumT
 
     fn from_xdr_buffered<T: AsRef<[u8]>>(
         read_stream: &mut ReadStream<T>,
-    ) -> Result<Self, ReadStreamError> {
+    ) -> Result<Self, DecodeError> {
         let enum_value = i32::from_xdr_buffered(read_stream)?;
         match enum_value {
 ${subReaders.join("\n")}
-            _ => Err(ReadStreamError::InvalidEnumDiscriminator {at_position: read_stream.get_position()})
+            _ => Err(DecodeError::InvalidEnumDiscriminator {at_position: read_stream.get_position()})
         }
     }`;
 

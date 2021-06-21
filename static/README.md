@@ -26,8 +26,10 @@ fn main() {
 
 All Stellar XDR types are defined in the module `xdr`. Each type implements the `xdr_codex::XdrCodec` trait, which defines the following two useful methods:
 
-- `fn to_xdr(&self) -> Vec<u8>`
-- `from_xdr(buffer: &Vec<u8>) -> Result<Self, ReadStreamError>`
+- `fn to_xdr(&self) -> Vec<u8>`: encode as binary XDR
+- `fn to_base64_xdr(&self) -> Vec<u8>`: encode as XDR, afterwards encode result as base64
+- `from_xdr<T: AsRef<[u8]>>(input: T) -> Result<Self, DecodeError>`: decode binary XDR
+- `from_base64_xdr<T: AsRef<[u8]>>(input: T) -> Result<Self, DecodeError>`: decode as base64, then decode result as XDR
 
 ### Features
 
