@@ -1,6 +1,6 @@
 [package]
 name = "substrate-stellar-xdr"
-version = "0.2.6"
+version = "0.2.7"
 authors = ["Torsten Stüber <torsten@satoshipay.io>"]
 edition = "2018"
 license = "Apache-2.0"
@@ -10,7 +10,7 @@ readme = "README.md"
 keywords = ["substrate", "Stellar", "XDR"]
 
 [dependencies]
-sp-std = { default-features = false, version = "3.0.0" }
+sp-std = { default-features = false, git = "https://github.com/paritytech/substrate" }
 base64 = { default-features = false, version = "0.13.0" }
 
 [features]
