@@ -1,6 +1,6 @@
-# DEPRACATED
+# DEPRECATED
 
-This repository is depracated, it is now part of the [Substrate Stellar SDK](https://github.com/pendulum-chain/substrate-stellar-sdk).
+This repository is deprecated, it is now part of the [Substrate Stellar SDK](https://github.com/pendulum-chain/substrate-stellar-sdk).
 
 # Generator of Stellar XDR type Encoder/Decoder
 

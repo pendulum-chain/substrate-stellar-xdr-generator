@@ -1,6 +1,6 @@
-# DEPRACATED
+# DEPRECATED
 
-This crate is depracated, it is now part of the [Substrate Stellar SDK](https://crates.io/crates/substrate-stellar-sdk).
+This crate is deprecated, it is now part of the [Substrate Stellar SDK](https://crates.io/crates/substrate-stellar-sdk).
 
 # A coder/decoder of Stellar XDR types
 
