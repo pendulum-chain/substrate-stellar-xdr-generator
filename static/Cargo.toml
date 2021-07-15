@@ -10,7 +10,7 @@ readme = "README.md"
 keywords = ["substrate", "Stellar", "XDR"]
 
 [dependencies]
-sp-std = { default-features = false, git = "https://github.com/paritytech/substrate" }
+sp-std = { default-features = false, version = "3.0.0" }
 base64 = { default-features = false, version = "0.13.0" }
 
 [features]
