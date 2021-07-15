@@ -1,3 +1,7 @@
+# DEPRACATED
+
+This crate is depracated, it is now part of the [Substrate Stellar SDK](https://crates.io/crates/substrate-stellar-sdk).
+
 # A coder/decoder of Stellar XDR types
 
 This repository generates a Rust decoder and encoder of all XDR types used in Stellar. The code is generated via the [Substrate Stellar XDR generator](`https://github.com/pendulum-chain/substrate-stellar-xdr-generator`).

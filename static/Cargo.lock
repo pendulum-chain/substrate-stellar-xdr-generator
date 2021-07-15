@@ -13,7 +13,7 @@ source = "git+https://github.com/paritytech/substrate#846cd08dcef98110ec37b3f871
 
 [[package]]
 name = "substrate-stellar-xdr"
-version = "0.2.7"
+version = "0.2.8"
 dependencies = [
  "base64",
  "sp-std",

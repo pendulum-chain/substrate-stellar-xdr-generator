@@ -1,6 +1,6 @@
 [package]
 name = "substrate-stellar-xdr"
-version = "0.2.7"
+version = "0.2.8"
 authors = ["Torsten Stüber <torsten@satoshipay.io>"]
 edition = "2018"
 license = "Apache-2.0"
